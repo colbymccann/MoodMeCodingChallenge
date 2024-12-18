@@ -37,6 +37,7 @@ struct ARFaceView : UIViewRepresentable {
     
     private func addEntity(isToggled: Bool) {
         anchor.children.removeAll()
+        viewModel.arView.scene.anchors.removeAll()
         
         let entity: Entity
         if isToggled {
@@ -47,8 +48,10 @@ struct ARFaceView : UIViewRepresentable {
         } else {
             entity = try! Entity.loadModel(named: "Beard_Goatee")
             entity.scale /= 8
-            entity.position.y = -0.15
-            entity.position.z = 0.06
+            entity.position.y = -0.16
+            entity.position.z = 0.12
+            entity.orientation = simd_quatf(angle: -38.0 * (.pi / 180), axis: SIMD3(x: 1, y: 0, z: 0))
+//            entity.orientation = simd_quatf(angle: .pi, axis: SIMD3(x: 0, y: 1, z: 0))
         }
         
         anchor.addChild(entity)

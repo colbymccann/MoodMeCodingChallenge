@@ -13,6 +13,7 @@ struct ContentView: View {
     @EnvironmentObject var viewModel: ARFaceViewViewModel
     @State private var videoName = ""
     @State var toggle: Bool = true
+    @State private var showDeleteConfirmationAlert = false
     
     let columns: [GridItem] = [
             GridItem(.flexible(), spacing: 16),
@@ -52,8 +53,22 @@ struct ContentView: View {
                 Button("Save") {
                     dataController.saveVideoToCoreData(videoName: videoName, videoURL: viewModel.videoURL, firstImageURL: viewModel.firstFrameURL, videoDuration: viewModel.videoDuration)
                 }
+                Button("Cancel") {
+                    showDeleteConfirmationAlert = true
+                }
             }, message: {
                 Text("Please provide a name for the video.")
+            })
+            .alert("Are you sure?", isPresented: $showDeleteConfirmationAlert, actions: {
+                Button("Yes, delete it") {
+                    viewModel.showAlert = false
+                    DataController.deleteVideoIfCancelled(videoURL: viewModel.videoURL)
+                }
+                Button("No", role: .cancel) {
+                    viewModel.showAlert = true
+                }
+            }, message: {
+                Text("Video will be deleted.")
             })
         }
     }
